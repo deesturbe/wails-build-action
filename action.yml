@@ -1,4 +1,4 @@
-name: "Wails Build Action"
+name: "Wails Build Action with upx"
 description: "Creates a wails binary"
 branding:
   icon: 'box'
@@ -47,6 +47,10 @@ inputs:
     description: "This gets run into bash, use the full command"
     required: false
     default: ""
+  upx:
+    description: "This installs upx, the Ultimate Packer for eXecutables."
+    required: false
+    default: "true"
   app-working-directory:
     description: "This gets run into bash, use the full command"
     required: false
@@ -124,6 +128,12 @@ runs:
       shell: bash
       working-directory: ${{inputs.deno-working-directory}}
       run: ${{inputs.deno-build}}
+    # (Optional) Setup upx
+    - name: Install UPX
+      uses: crazy-max/ghaction-upx@v2
+      if: inputs.upx == 'true'
+      with:
+        install-only: true
     # install wails
     - name: Install Wails
       if: inputs.build == 'true'
